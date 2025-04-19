@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Customer Details</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+        text-align: center;
+      }
+
+      .form input {
+        font-size: 1rem;
+        margin-top: 20px;
+      }
+
+      .form button {
+        font-size: 1.5rem;
+        margin-top: 20px;
+        padding: 10px 20px;
+        cursor: pointer;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+      }
+
+      .form button:hover {
+        background-color: #45a049;
+      }
+
+      .footer {
+        position: absolute;
+        bottom: 20px;
+        width: 100%;
+      }
+
+      .footer p {
+        font-size: 1rem;
+        color: gray;
+      }
+
+      .logo {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="logo">
+      <img
+        src="{{ url_for('static', filename='logo.png') }}"
+        alt="Company Logo"
+        height="50"
+      />
+    </div>
+
+    <div class="content">
+      <h1>Enter Customer Details</h1>
+      <h2>Selected PCP Type: {{ pcp_type }}</h2>
+      <form method="POST">
+        <input
+          type="text"
+          name="customer_name"
+          placeholder="Customer Name"
+          required
+        /><br /><br />
+        <input
+          type="text"
+          name="short_name"
+          placeholder="Short Name"
+          required
+        /><br /><br />
+        <input
+          type="text"
+          name="type"
+          placeholder="Type"
+          required
+        /><br /><br />
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+
+    <div class="footer">
+      <p>Qualys Confidential</p>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>IP Worksheet</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 40px;
+        text-align: center;
+      }
+
+      .logo {
+        text-align: left;
+        margin-bottom: 20px;
+      }
+
+      h2 {
+        margin-bottom: 10px;
+      }
+
+      table {
+        margin: 20px auto;
+        border-collapse: collapse;
+        width: 95%;
+      }
+
+      th,
+      td {
+        border: 1px solid #ccc;
+        padding: 10px;
+      }
+
+      th {
+        background-color: #f2f2f2;
+      }
+
+      .add-row,
+      .add-row-mgmt,
+      .submit,
+      .add-fqdn,
+      .add-ip-subnet {
+        margin: 20px 10px;
+        padding: 10px 15px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 4px;
+      }
+
+      .add-row:hover,
+      .add-row-mgmt:hover,
+      .submit:hover,
+      .add-fqdn:hover,
+      .add-ip-subnet:hover {
+        background-color: #0056b3;
+      }
+
+      .delete-row {
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        padding: 6px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      .delete-row:hover {
+        background-color: #b52a36;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Logo -->
+    <div class="logo">
+      <img
+        src="{{ url_for('static', filename='logo.png') }}"
+        alt="Qualys Logo"
+        height="50"
+      />
+    </div>
+
+    <!-- Table 1 -->
+    <h2>Table 1 - IP Worksheet for the Service Network</h2>
+    <h3>Service Network</h3>
+
+    <div class="no-print">
+      <label for="fqdnInput">Enter FQDN Prefix:</label>
+      <input
+        type="text"
+        id="fqdnInput"
+        placeholder="Enter FQDN suffix e.g., .abc.test.com"
+      />
+      <button type="button" class="add-fqdn">Add FQDN</button>
+    </div>
+
+    <div class="no-print">
+      <label for="ipBaseInput">Enter Base IP (e.g., 10.0.0.1):</label>
+      <input type="text" id="ipBaseInput" placeholder="Enter IP subnet" />
+      <button type="button" class="add-ip-subnet">Add IP Subnet</button>
+    </div>
+
+    <form method="post" action="{{ url_for('firewall_policy_1') }}">
+      <table id="ipTable">
+        <thead>
+          <tr>
+            <th>FQDN</th>
+            <th>DNS</th>
+            <th>Certificate</th>
+            <th>Purpose</th>
+            <th>Customer Allocation</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% set fqdn_list = ["qualysguard", "qualysapi", "qgadmin", "qgportal",
+          "qgportal-bo", "qgdistribution", "qgmonitoring", "qgscanservice1",
+          "qgdownload", "apigateway", "qagpublic", "camsrepo", "camspublic",
+          "camspm", "nac-le-service", "Platform-Gateway"] %} {% set purpose_list
+          = [ "QualysGuard frontoffice UI", "QualysGuard API", "QualysGuard
+          Backoffice UI", "Portal frontoffice UI", "Portal backoffice UI",
+          "Scanner Software Distribution", "Scanner Monitoring", "Scanner Job
+          Management", "Software Download Service", "For API Handling", "Cloud
+          Agent", "For QGS Appliance", "For QGS Appliance", "For QGS Appliance",
+          "Sensor service", "Traffic from platform goes out with this IP" ] %}
+          {% for i in range(16) %}
+          <tr>
+            <td>
+              <input type="text" name="fqdn[]" value="{{ fqdn_list[i] }}" />
+            </td>
+            <td><input type="text" name="dns[]" value="Yes" /></td>
+            <td><input type="text" name="certificate[]" value="Yes" /></td>
+            <td>
+              <input
+                type="text"
+                name="purpose[]"
+                value="{{ purpose_list[i] }}"
+              />
+            </td>
+            <td><input type="text" name="customer_allocation[]" /></td>
+            <td><button type="button" class="delete-row">Delete</button></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <div class="no-print">
+        <button type="button" class="add-row">Add Row</button>
+      </div>
+    </form>
+
+    <!-- Table 2 -->
+    <h2>Table 2 - IP Worksheet for the Management Network</h2>
+    <h3>Management Network</h3>
+
+    <form method="post" action="{{ url_for('firewall_policy_1') }}">
+      <table id="mgmtTable">
+        <thead>
+          <tr>
+            <th>FQDN</th>
+            <th>DNS</th>
+            <th>Certificate</th>
+            <th>Purpose</th>
+            <th>Customer Allocation</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% set fqdn_list = ["ac01", "supportac01", "lb01", "vcn01",
+          "vhs01-02-03-04-05", "vhs01-02-03-04-05-ilo", "cmc-chassis01-02-fx2"]
+          %} {% for i in range(10) %}
+          <tr>
+            <td>
+              <input
+                type="text"
+                name="mgmt_fqdn[]"
+                value="{{ fqdn_list[i] if i < fqdn_list|length else '' }}"
+              />
+            </td>
+            <td><input type="text" name="mgmt_dns[]" value="No" /></td>
+            <td><input type="text" name="mgmt_certificate[]" value="No" /></td>
+            <td>
+              <input type="text" name="mgmt_purpose[]" value="PCP Management" />
+            </td>
+            <td><input type="text" name="mgmt_customer_allocation[]" /></td>
+            <td><button type="button" class="delete-row">Delete</button></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <button type="button" class="add-row-mgmt">Add Row</button>
+      <button type="submit" class="submit">Next</button>
+    </form>
+
+    <!-- JavaScript -->
+    <script>
+      document
+        .querySelector(".add-fqdn")
+        .addEventListener("click", function () {
+          const domainToAdd = document.querySelector("#fqdnInput").value.trim();
+          if (!domainToAdd.startsWith(".")) {
+            alert(
+              "Please enter domain starting with a dot (e.g., .abc.test.com)"
+            );
+            return;
+          }
+
+          // Service network FQDNs
+          const serviceFqdns = document.querySelectorAll(
+            'input[name="fqdn[]"]'
+          );
+          serviceFqdns.forEach((field) => {
+            if (field.value && !field.value.endsWith(domainToAdd)) {
+              field.value += domainToAdd;
+            }
+          });
+
+          // Management network FQDNs
+          const mgmtFqdns = document.querySelectorAll(
+            'input[name="mgmt_fqdn[]"]'
+          );
+          mgmtFqdns.forEach((field) => {
+            if (field.value && !field.value.endsWith(domainToAdd)) {
+              field.value += domainToAdd;
+            }
+          });
+        });
+
+      function incrementIP(ip, count) {
+        const parts = ip.split(".").map(Number);
+        const result = [];
+        for (let i = 0; i < count; i++) {
+          let [a, b, c, d] = parts;
+          d += i;
+          if (d > 255) {
+            c += Math.floor(d / 256);
+            d %= 256;
+          }
+          if (c > 255) {
+            b += Math.floor(c / 256);
+            c %= 256;
+          }
+          if (b > 255) {
+            a += Math.floor(b / 256);
+            b %= 256;
+          }
+          result.push(`${a}.${b}.${c}.${d}`);
+        }
+        return result;
+      }
+
+      document
+        .querySelector(".add-ip-subnet")
+        .addEventListener("click", function () {
+          const baseIP = document.querySelector("#ipBaseInput").value.trim();
+          if (!baseIP.match(/^(\d{1,3}\.){3}\d{1,3}$/)) {
+            alert("Invalid IP format");
+            return;
+          }
+
+          const ips = incrementIP(baseIP, 15);
+          const rows = document.querySelectorAll("#ipTable tbody tr");
+          rows.forEach((row, index) => {
+            const ipField = row.querySelector(
+              'input[name="customer_allocation[]"]'
+            );
+            if (ipField && index < ips.length) {
+              ipField.value = ips[index];
+            }
+          });
+        });
+
+      document.querySelector(".add-row").addEventListener("click", function () {
+        const table = document.querySelector("#ipTable tbody");
+        const newRow = document.createElement("tr");
+        newRow.innerHTML = `
+                <td><input type="text" name="fqdn[]"></td>
+                <td><input type="text" name="dns[]" value="Yes"></td>
+                <td><input type="text" name="certificate[]" value="Yes"></td>
+                <td><input type="text" name="purpose[]"></td>
+                <td><input type="text" name="customer_allocation[]"></td>
+                <td><button type="button" class="delete-row">Delete</button></td>
+            `;
+        table.appendChild(newRow);
+      });
+
+      document
+        .querySelector(".add-row-mgmt")
+        .addEventListener("click", function () {
+          const table = document.querySelector("#mgmtTable tbody");
+          const newRow = document.createElement("tr");
+          newRow.innerHTML = `
+                <td><input type="text" name="mgmt_fqdn[]"></td>
+                <td><input type="text" name="mgmt_dns[]" value="Yes"></td>
+                <td><input type="text" name="mgmt_certificate[]" value="Yes"></td>
+                <td><input type="text" name="mgmt_purpose[]"></td>
+                <td><input type="text" name="mgmt_customer_allocation[]"></td>
+                <td><button type="button" class="delete-row">Delete</button></td>
+            `;
+          table.appendChild(newRow);
+        });
+
+      document.addEventListener("click", function (e) {
+        if (e.target && e.target.classList.contains("delete-row")) {
+          const row = e.target.closest("tr");
+          row.remove();
+        }
+      });
+    </script>
+
+    <div class="footer">
+      <p>Qualys Confidential</p>
+    </div>
+  </body>
+</html>

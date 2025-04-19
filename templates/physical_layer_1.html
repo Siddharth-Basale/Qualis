@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Physical Layer 1</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        position: relative;
+      }
+
+      .logo {
+        position: absolute;
+        top: 30px;
+        left: 40px;
+      }
+
+      .main-heading {
+        position: absolute;
+        top: 15%;
+        left: 50%;
+        transform: translate(-50%, -15%);
+        font-size: 2rem;
+        font-weight: bold;
+        width: 80%;
+      }
+
+      .image-upload {
+        margin-top: 40px;
+      }
+
+      .image-preview {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+      }
+
+      #uploaded-image {
+        max-width: 80%;
+        max-height: 400px;
+        border: 2px solid #ccc;
+        display: none;
+      }
+
+      .next-button {
+        margin-top: 30px;
+        padding: 10px 20px;
+        font-size: 1.2rem;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .next-button:hover {
+        background-color: #45a049;
+      }
+
+      .footer {
+        position: absolute;
+        bottom: 20px;
+        width: 100%;
+        font-size: 1rem;
+        color: gray;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Logo -->
+    <div class="logo">
+      <img
+        src="{{ url_for('static', filename='logo.png') }}"
+        alt="Qualys Logo"
+        height="50"
+      />
+    </div>
+
+    <!-- Main Heading -->
+    <div class="main-heading">
+      Physical Layer 1 Page
+
+      <!-- Image Upload Section -->
+      <div class="image-upload">
+        <input type="file" id="imageInput" accept="image/*" />
+      </div>
+
+      <!-- Centered Image Preview -->
+      <div class="image-preview">
+        <img id="uploaded-image" src="#" alt="Your image will appear here" />
+      </div>
+
+      <!-- Next Button -->
+      <form action="{{ url_for('ip_worksheet') }}" method="get">
+        <button type="submit" class="next-button">Next</button>
+      </form>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <p>Qualys Confidential</p>
+    </div>
+
+    <script>
+      const imageInput = document.getElementById("imageInput");
+      const uploadedImage = document.getElementById("uploaded-image");
+
+      imageInput.onchange = (evt) => {
+        const [file] = imageInput.files;
+        if (file) {
+          uploadedImage.src = URL.createObjectURL(file);
+          uploadedImage.style.display = "block";
+        }
+      };
+    </script>
+  </body>
+</html>

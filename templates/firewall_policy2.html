@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Firewall Policy Worksheet 2</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            text-align: center;
+        }
+
+        .logo {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        h2, h3 {
+            margin-bottom: 10px;
+        }
+
+        table {
+            margin: 20px auto;
+            border-collapse: collapse;
+            width: 95%;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .delete-row {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .delete-row:hover {
+            background-color: #b52a36;
+        }
+
+        .center-button {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .next-button, .add-row-button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            margin: 0 10px;
+        }
+
+        .next-button:hover, .add-row-button:hover {
+            background-color: #218838;
+        }
+
+        .footer {
+            margin-top: 30px;
+            font-size: 0.9em;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="logo">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" height="50">
+    </div>
+
+    <h2>Firewall Policy Worksheet 2</h2>
+
+<h3>Table 4 - IP Worksheet for the Management Network</h3>
+
+<div style="display: flex; justify-content: center; gap: 50px; margin: 20px 0;">
+    <div>
+        <label for="fqdnInput"><strong>FQDN Suffix</strong></label><br>
+        <input type="text" id="fqdnInput" placeholder=".abc.test.com" style="padding: 8px; width: 220px; margin-top: 5px;">
+        <button type="button" onclick="addFQDN()" style="margin-left: 10px; background-color: #28a745; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer;">Add FQDN</button>
+    </div>
+    <div>
+        <label for="ipBaseInput"><strong>Base IP Address</strong></label><br>
+        <input type="text" id="ipBaseInput" placeholder="e.g. 10.0.0.1" style="padding: 8px; width: 220px; margin-top: 5px;">
+        <button type="button" onclick="addIPSubnet()" style="margin-left: 10px; background-color: #28a745; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer;">Add IP Subnet</button>
+    </div>
+</div>
+
+    <div>
+        <label for="realSourceInput"><strong>Qualys Real Source</strong></label><br>
+        <input type="text" id="realSourceInput" placeholder="e.g. qlx-source" style="padding: 8px; width: 220px; margin-top: 5px;">
+        <button type="button" onclick="addRealSource()" style="margin-left: 10px; background-color: #28a745; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer;">Update Source</button>
+    </div>
+</div>
+
+
+<form method="POST" action="{{ url_for('network_design') }}">
+
+        <table id="firewallPolicyTable2">
+            <thead>
+                <tr>
+                    <th>Protocol</th>
+                    <th>Qualys Real Source</th>
+                    <th>Source Port</th>
+                    <th>Direction</th>
+                    <th>Host</th>
+                    <th>Description</th>
+                    <th>Management IP Destination</th>
+                    <th>Port</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+    {% set host_list = ["ac01", "supportac01", "lb01", "lb02", "vcn01", "vhs01", "vhs02", "vhs03", "vhs04", "vhs05", "vhs06", "vhs07", "vhs01-ilo", "vhs02-ilo", "vhs03-ilo", "vhs04-ilo", "vhs05-ilo", "vhs06-ilo", "vhs07-ilo", "cmc-chassis01-fx2", "cmc-chassis02-fx2", "cmc-chassis03-fx2", "cmc-chassis04-fx2",  "iom"] %}
+
+   {% set description_list = ["Jump Host", "Jump Host", "Load Balancer", "Load Balancer", "VCN Host", "Esxi Server Management", "Esxi Server Management", "Esxi Server Management", "Esxi Server Management", "Esxi Server Management", "Esxi Server Management", "Esxi Server Management", "Esxi Server ilo", "Esxi Server ilo", "Esxi Server ilo", "Esxi Server ilo", "Esxi Server ilo", "Esxi Server ilo", "Esxi Server ilo", "Chassis Out of Band", "Chassis Out of Band", "Chassis Out of Band", "Chassis Out of Band",  "IOM Management"] %}
+
+                {% set port_list = [
+                    "22", "22", "22", "22", "443, 902, 9443, 7343", "443, 903, 902", "443, 903, 902", "443, 903, 902", "443, 903, 902", "443, 903, 902", "443, 903, 902", "443, 903, 902", "443, 2086, 17990, 5900", "443, 2086, 17990, 5900", "443, 2086, 17990, 5900", "443, 2086, 17990, 5900", "443, 2086, 17990, 5900", "443, 2086, 17990, 5900", "443, 2086, 17990, 5900", "22, 443", "22, 443", "22, 443", "22, 443", "161" ] %}
+
+                {% for i in range(25) %}
+                <tr>
+                    <td><input type="text" name="protocol[]" value="TCP"></td>
+                    <td><input type="text" name="real_source_{{ i }}"></td>
+                    <td><input type="text" name="source_port[]" value="gt 1023"></td>
+                    <td><input type="text" name="direction[]" value=">>"></td>
+                    <td><input type="text" name="host[]" value="{{ host_list[i] }}"></td>
+                    <td><input type="text" name="description[]" value="{{ description_list[i] }}"></td>
+                    <td><input type="text" name="mgmt_dest_ip_{{ i }}"></td>
+                    <td><input type="text" name="port[]" value="{{ port_list[i] }}"></td>
+                    <td><button type="button" class="delete-row" onclick="deleteRow(this)">Delete</button></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="center-button">
+            <button type="button" class="add-row-button">Add Row</button>
+            <button type="submit" class="next-button">Next</button>
+        </div>
+    </form>
+
+    <script>
+        function addRow(event) {
+            event.preventDefault();
+            const table = document.getElementById("firewallPolicyTable2").getElementsByTagName('tbody')[0];
+            const newRow = table.rows[0].cloneNode(true);
+            newRow.querySelectorAll('input').forEach(input => input.value = '');
+            table.appendChild(newRow);
+        }
+
+        function deleteRow(button) {
+            const row = button.closest('tr');
+            const table = document.getElementById("firewallPolicyTable2").getElementsByTagName('tbody')[0];
+            if (table.rows.length > 1) {
+                row.remove();
+            }
+        }
+
+function addFQDN() {
+    const suffix = document.getElementById("fqdnInput").value.trim();
+    if (!suffix) return;
+
+    const rows = document.querySelectorAll("#firewallPolicyTable2 tbody tr");
+    rows.forEach((row, index) => {
+        if (index < 50) {
+            const hostInput = row.querySelector(`input[name^='host[]']`);
+            if (hostInput && hostInput.value && !hostInput.value.endsWith(suffix)) {
+                hostInput.value += suffix;
+            }
+        }
+    });
+}
+
+function addIPSubnet() {
+    const baseIP = document.getElementById("ipBaseInput").value.trim();
+    if (!baseIP) return;
+
+    const ipParts = baseIP.split(".");
+    if (ipParts.length !== 4) return;
+
+    let lastOctet = parseInt(ipParts[3]);
+
+    const rows = document.querySelectorAll("#firewallPolicyTable2 tbody tr");
+    rows.forEach((row, index) => {
+        if (index < 50) {
+            const ipInput = row.querySelector(`input[name^='mgmt_dest_ip_']`);
+            if (ipInput) {
+                ipParts[3] = lastOctet + index;
+                ipInput.value = ipParts.join(".");
+            }
+        }
+    });
+}
+
+function addRealSource() {
+    const value = document.getElementById("realSourceInput").value.trim();
+    if (!value) return;
+
+    const rows = document.querySelectorAll("#firewallPolicyTable2 tbody tr");
+    rows.forEach((row, index) => {
+        const input = row.querySelector(`input[name^='real_source_']`);
+        if (input) input.value = value;
+    });
+}
+
+
+
+        window.onload = function () {
+            document.querySelector(".add-row-button").addEventListener("click", addRow);
+        };
+    </script>
+
+    <div class="footer">
+        <p>Qualys Confidential</p>
+    </div>
+</body>
+</html>
+

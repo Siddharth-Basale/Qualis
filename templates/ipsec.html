@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>IPSec</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 40px;
+        text-align: center;
+      }
+
+      .logo {
+        text-align: left;
+        margin-bottom: 20px;
+      }
+
+      h2 {
+        margin-bottom: 20px;
+      }
+
+      table {
+        width: 80%;
+        margin: 20px auto;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        padding: 10px;
+        text-align: left;
+        border: 1px solid #ddd;
+      }
+
+      th {
+        background-color: #f2f2f2;
+      }
+
+      .footer {
+        margin-top: 40px;
+        font-size: 0.9em;
+        color: #666;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="logo">
+      <img
+        src="{{ url_for('static', filename='logo.png') }}"
+        alt="Logo"
+        height="50"
+      />
+    </div>
+
+    <h2>
+      IPSec Communication from the Qualys Private Cloud Platform Management
+      Network
+    </h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Protocol</th>
+          <th>Source IP</th>
+          <th>Direction</th>
+          <th>Purpose</th>
+          <th>Destination IP</th>
+          <th>Destination Port</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <input type="text" name="protocol[]" placeholder="e.g., TCP" />
+          </td>
+          <td>
+            <input
+              type="text"
+              name="source_ip[]"
+              placeholder="e.g., 192.168.1.1"
+            />
+          </td>
+          <td>
+            <input type="text" name="direction[]" placeholder="e.g., Inbound" />
+          </td>
+          <td>
+            <input
+              type="text"
+              name="purpose[]"
+              placeholder="e.g., Access Control"
+            />
+          </td>
+          <td>
+            <input
+              type="text"
+              name="destination_ip[]"
+              placeholder="e.g., 192.168.2.1"
+            />
+          </td>
+          <td>
+            <input
+              type="text"
+              name="destination_port[]"
+              placeholder="e.g., 443"
+            />
+          </td>
+        </tr>
+        <!-- Add more rows as needed -->
+      </tbody>
+    </table>
+
+    <button onclick="addRow()">Add Row</button>
+
+    <div class="footer">
+      <p>Qualys Confidential</p>
+    </div>
+
+    <script>
+      function addRow() {
+        const table = document.querySelector("table tbody");
+        const newRow = document.createElement("tr");
+
+        newRow.innerHTML = `
+            <td><input type="text" name="protocol[]" placeholder="e.g., TCP"></td>
+            <td><input type="text" name="source_ip[]" placeholder="e.g., 192.168.1.1"></td>
+            <td><input type="text" name="direction[]" placeholder="e.g., Inbound"></td>
+            <td><input type="text" name="purpose[]" placeholder="e.g., Access Control"></td>
+            <td><input type="text" name="destination_ip[]" placeholder="e.g., 192.168.2.1"></td>
+            <td><input type="text" name="destination_port[]" placeholder="e.g., 443"></td>
+        `;
+
+        table.appendChild(newRow);
+      }
+    </script>
+  </body>
+</html>

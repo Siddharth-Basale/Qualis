@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Introduction</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        position: relative;
+      }
+
+      .logo {
+        position: absolute;
+        top: 30px;
+        left: 40px;
+      }
+
+      .main-heading {
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 1.5rem;
+        font-weight: bold;
+        width: 80%;
+      }
+
+      .next-button {
+        margin-top: 30px;
+        padding: 10px 20px;
+        font-size: 1.2rem;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .next-button:hover {
+        background-color: #45a049;
+      }
+
+      .pcp-type {
+        margin-top: 20px;
+        font-size: 1rem;
+      }
+
+      .footer {
+        position: absolute;
+        bottom: 20px;
+        width: 100%;
+        text-align: center;
+        color: gray;
+        font-size: 0.9rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="logo">
+      <img
+        src="{{ url_for('static', filename='logo.png') }}"
+        alt="Qualys Logo"
+        height="40"
+      />
+    </div>
+
+    <div class="main-heading">
+      Qualys Private Cloud Platform External Network Deployment Document for<br />
+      {{ customer_name }} Company ({{ short_name.upper() }})
+
+      <div class="pcp-type">Type: {{ type_value }}</div>
+      <form action="{{ url_for('physical_layer_1') }}" method="post">
+        <button type="submit" class="next-button">
+          Next: Physical Layer 1
+        </button>
+      </form>
+    </div>
+    <div class="footer">Qualys Confidential</div>
+  </body>
+</html>

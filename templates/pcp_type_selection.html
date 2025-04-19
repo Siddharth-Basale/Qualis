@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PCP Type Selection</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+        text-align: center;
+      }
+
+      .pcp-button {
+        font-size: 1.5rem;
+        margin: 10px;
+        padding: 10px 20px;
+        cursor: pointer;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+      }
+
+      .pcp-button:hover {
+        background-color: #45a049;
+      }
+
+      .footer {
+        position: absolute;
+        bottom: 20px;
+        width: 100%;
+      }
+
+      .footer p {
+        font-size: 1rem;
+        color: gray;
+      }
+
+      .logo {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="logo">
+      <img
+        src="{{ url_for('static', filename='logo.png') }}"
+        alt="Company Logo"
+        height="50"
+      />
+    </div>
+
+    <div class="content">
+      <h1>Select PCP Design</h1>
+      <form method="POST">
+        <button
+          type="submit"
+          name="pcp_type"
+          value="Qualys Lego PCP with persistent IPsec VPN connection"
+          class="pcp-button"
+        >
+          Lego-PCP-A
+        </button>
+        <button type="submit" name="pcp_type" value="PCP-B" class="pcp-button">
+          PCP-B
+        </button>
+        <button type="submit" name="pcp_type" value="PCP-C" class="pcp-button">
+          PCP-C
+        </button>
+        <button type="submit" name="pcp_type" value="PCP-D" class="pcp-button">
+          PCP-D
+        </button>
+      </form>
+    </div>
+
+    <div class="footer">
+      <p>Qualys Confidential</p>
+    </div>
+  </body>
+</html>

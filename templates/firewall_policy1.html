@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Firewall Policy Worksheet 1</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 40px;
+        text-align: center;
+      }
+
+      .logo {
+        text-align: left;
+        margin-bottom: 20px;
+      }
+
+      h2 {
+        margin-bottom: 10px;
+      }
+
+      table {
+        margin: 20px auto;
+        border-collapse: collapse;
+        width: 95%;
+      }
+
+      th,
+      td {
+        border: 1px solid #ccc;
+        padding: 10px;
+      }
+
+      th {
+        background-color: #f2f2f2;
+      }
+
+      .add-row,
+      .add-fqdn,
+      .submit,
+      .add-ip-subnet {
+        margin: 10px 5px;
+        padding: 8px 12px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 4px;
+      }
+
+      .add-row:hover,
+      .add-fqdn:hover,
+      .add-ip-subnet:hover {
+        background-color: #0056b3;
+      }
+
+      .delete-row {
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        padding: 6px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      .delete-row:hover {
+        background-color: #b52a36;
+      }
+
+      .center-button {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+      }
+
+      .next-button,
+      .add-row-button {
+        background-color: #28a745;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+        border-radius: 4px;
+        margin: 0 10px;
+      }
+
+      .next-button:hover,
+      .add-row-button:hover {
+        background-color: #218838;
+      }
+
+      .footer {
+        margin-top: 30px;
+        font-size: 0.9em;
+        color: #666;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="logo">
+      <img
+        src="{{ url_for('static', filename='logo.png') }}"
+        alt="Logo"
+        height="50"
+      />
+    </div>
+
+    <h2>Firewall Policy Worksheet 1</h2>
+    <h3>
+      Table 3 - Communication Qualys Private Cloud Platform Service Network
+    </h3>
+
+    <form method="POST" action="{{ url_for('firewall_policy_worksheet_2') }}">
+      <div class="no-print">
+        <label for="fqdnInput">Enter FQDN Suffix:</label>
+        <input type="text" id="fqdnInput" placeholder="e.g., .abc.test.com" />
+        <button type="button" class="add-fqdn">Add FQDN</button>
+      </div>
+
+      <div class="no-print">
+        <label for="ipBaseInput">Enter Base IP (e.g., 10.0.0.1):</label>
+        <input type="text" id="ipBaseInput" placeholder="Enter IP subnet" />
+        <button type="button" class="add-ip-subnet">Add IP Subnet</button>
+      </div>
+
+      <table id="firewallTable">
+        <thead>
+          <tr>
+            <th>Protocol</th>
+            <th>Source IP</th>
+            <th>Source Port</th>
+            <th>Direction</th>
+            <th>Destination</th>
+            <th>Service DEST IP</th>
+            <th>Destination Port</th>
+            <th>Purpose</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% set fqdn_list = ["qualysguard", "qualysapi", "qgadmin", "qgportal",
+          "qgportal-bo", "qgdistribution", "qgmonitoring", "qgscanservice1",
+          "qgdownload", "apigateway", "qagpublic", "camsrepo", "camspublic",
+          "camspm", "nac-le-service", "hooks.slack.com", "events.pagerduty.com",
+          "update.release.flatcar-linux.net", "*.ivanti.com", "Customers SMTP
+          end point", "dist3.qualys.com", "proxy", "Customers DNS end point",
+          "Customers NTP end point"] %} {% set purpose_list = [ "QualysGuard
+          frontoffice UI", "QualysGuard API", "QualysGuard Backoffice UI",
+          "Portal frontoffice UI", "Portal backoffice UI", "Scanner Software
+          Distribution", "Scanner Monitoring", "Scanner Job Management",
+          "Software Download Service", "For API Handling", "Cloud Agent", "For
+          QGS Appliance", "For QGS Appliance", "For QGS Appliance", "Sensor
+          service", "For PM Module", "For PM Module", "For Appliance Upgrade",
+          "For PM Catalog", "Platform SMTP Requirement", "Qualys Content
+          Delivery Network", "For external communicationTable", "Platform DNS
+          Requirement", "Platform NTP Requirement" ] %} {% set
+          destination_port_list = [ "80,443", "443", "443", "80,443", "80,443",
+          "80,443", "80,443", "443", "443", "443", "443", "443", "443", "443",
+          "443", "443", "443", "443", "443", "25", "123", "", "53", "123" ] %}
+          {% for i in range(25) %}
+          <tr>
+            <td><input type="text" name="protocol_{{ i }}" /></td>
+            <td><input type="text" name="source_ip_{{ i }}" /></td>
+            <td><input type="text" name="source_port_{{ i }}" /></td>
+            <td><input type="text" name="direction[]" value=">>" /></td>
+            <td>
+              <input
+                type="text"
+                name="destination[]"
+                class="fqdn"
+                value="{{ fqdn_list[i] }}"
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                name="service_dest_ip_{{ i }}"
+                class="ip-subnet"
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                name="destination_port[]"
+                value="{{ destination_port_list[i] }}"
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                name="purpose[]"
+                value="{{ purpose_list[i] }}"
+              />
+            </td>
+            <td>
+              <button
+                type="button"
+                class="delete-row"
+                onclick="deleteRow(this)"
+              >
+                Delete
+              </button>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <div class="center-button">
+        <button type="button" class="add-row-button">Add Row</button>
+        <button type="submit" class="next-button">Next</button>
+      </div>
+    </form>
+
+    <script>
+      function addRow(event) {
+        event.preventDefault();
+        const table = document
+          .getElementById("firewallTable")
+          .getElementsByTagName("tbody")[0];
+        const newRow = table.rows[0].cloneNode(true);
+        newRow.querySelectorAll("input").forEach((input) => (input.value = ""));
+        table.appendChild(newRow);
+      }
+
+      function deleteRow(button) {
+        const row = button.closest("tr");
+        const table = document
+          .getElementById("firewallTable")
+          .getElementsByTagName("tbody")[0];
+        if (table.rows.length > 1) {
+          row.remove();
+        }
+      }
+
+      function addFQDN() {
+        const suffix = document.getElementById("fqdnInput").value.trim();
+        if (!suffix) return;
+
+        const fqdnInputs = document.querySelectorAll(".fqdn");
+
+        fqdnInputs.forEach((input, index) => {
+          if (index < 15 && input.value && !input.value.endsWith(suffix)) {
+            input.value = input.value + suffix;
+          }
+        });
+      }
+
+      function addIPSubnet() {
+        const baseIP = document.getElementById("ipBaseInput").value.trim();
+        if (!baseIP) return;
+
+        const ipParts = baseIP.split(".");
+        let lastOctet = parseInt(ipParts[3]);
+
+        // Service DEST IP: First 15 get IPs, next 4 (index 15 to 18) get "FQDN Based"
+        document.querySelectorAll(".ip-subnet").forEach((input, index) => {
+          if (index < 15) {
+            if (!input.value) {
+              ipParts[3] = lastOctet + index;
+              input.value = ipParts.join(".");
+            }
+          } else if (index >= 15 && index < 19) {
+            input.value = "FQDN Based";
+          }
+        });
+        // Set "Customer IP" in Source IP column for first 15 rows
+        document
+          .querySelectorAll('input[name^="source_ip_"]')
+          .forEach((input, index) => {
+            if (index < 15) {
+              input.value = "Customer IP";
+            }
+          });
+
+        // Protocol:
+        document
+          .querySelectorAll('input[name^="protocol_"]')
+          .forEach((input, index) => {
+            if (index < 22) {
+              input.value = "TCP";
+            } else if (index === 22) {
+              input.value = "TCP/UDP";
+            } else if (index === 23) {
+              input.value = "UDP";
+            }
+          });
+
+        // ✅ Set "TCP" in Protocol column for first 22 rows
+        document
+          .querySelectorAll('input[name^="protocol_"]')
+          .forEach((input, index) => {
+            if (index < 22) {
+              input.value = "TCP";
+            }
+          });
+
+        // ✅ Set "gt 1023" in Source Port column for first 23 rows
+        document
+          .querySelectorAll('input[name^="source_port_"]')
+          .forEach((input, index) => {
+            if (index < 23) {
+              input.value = "gt 1023";
+            }
+          });
+      }
+
+      window.onload = function () {
+        document
+          .querySelector(".add-row-button")
+          .addEventListener("click", addRow);
+        document.querySelector(".add-fqdn").addEventListener("click", addFQDN);
+        document
+          .querySelector(".add-ip-subnet")
+          .addEventListener("click", addIPSubnet);
+      };
+    </script>
+
+    <div class="footer">
+      <p>Qualys Confidential</p>
+    </div>
+  </body>
+</html>
