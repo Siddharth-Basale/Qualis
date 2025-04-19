@@ -4,6 +4,14 @@
     <meta charset="UTF-8" />
     <title>Introduction</title>
     <style>
+      {% if hide_buttons %}
+      button, .no-print {
+          display: none !important;
+      }
+      {% endif %}
+  </style>
+    <style>
+
       body {
         font-family: Arial, sans-serif;
         text-align: center;

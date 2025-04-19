@@ -9,6 +9,14 @@
       href="{{ url_for('static', filename='styles.css') }}"
     />
     <style>
+      {% if hide_buttons %}
+      button, .no-print {
+          display: none !important;
+      }
+      {% endif %}
+  </style>
+    <style>
+      
       body {
         font-family: Arial, sans-serif;
         display: flex;
@@ -55,6 +63,7 @@
         position: absolute;
         top: 20px;
         right: 20px;
+        
       }
     </style>
   </head>
@@ -89,7 +98,13 @@
           placeholder="Type"
           required
         /><br /><br />
-        <button type="submit">Submit</button>
+        <button type="submit">Submit<style>
+          {% if hide_buttons %}
+          button, .no-print {
+              display: none !important;
+          }
+          {% endif %}
+      </style></button>
       </form>
     </div>
 

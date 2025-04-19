@@ -4,6 +4,13 @@
     <meta charset="UTF-8" />
     <title>IP Worksheet</title>
     <style>
+      {% if hide_buttons %}
+      button, .no-print {
+          display: none !important;
+      }
+      {% endif %}
+  </style>
+    <style>
       body {
         font-family: Arial, sans-serif;
         margin: 40px;

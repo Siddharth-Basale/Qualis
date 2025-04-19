@@ -4,6 +4,13 @@
     <meta charset="UTF-8" />
     <title>IPSec</title>
     <style>
+      {% if hide_buttons %}
+      button, .no-print {
+          display: none !important;
+      }
+      {% endif %}
+  </style>
+    <style>
       body {
         font-family: Arial, sans-serif;
         margin: 40px;
@@ -41,6 +48,7 @@
         font-size: 0.9em;
         color: #666;
       }
+      
     </style>
   </head>
   <body>
@@ -110,6 +118,25 @@
     </table>
 
     <button onclick="addRow()">Add Row</button>
+    <!-- Add this before the footer in ipsec.html -->
+    <form action="{{ url_for('download_pdf') }}" method="get">
+      <button
+        type="submit"
+        style="
+          background-color: #4caf50;
+          color: white;
+          padding: 10px 20px;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 1.1rem;
+          margin-top: 20px;
+        "
+      >
+        Download Complete PDF
+        
+      </button>
+    </form>
 
     <div class="footer">
       <p>Qualys Confidential</p>
