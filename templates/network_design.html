@@ -4,12 +4,19 @@
     <meta charset="UTF-8" />
     <title>Network Design</title>
     <style>
-      {% if hide_buttons %}
-      button, .no-print {
+      {
+          % if hide_buttons %
+      }
+
+      button,
+      .no-print {
           display: none !important;
       }
-      {% endif %}
-  </style>
+
+      {
+          % endif %
+      }
+    </style>
     <style>
       body {
         font-family: Arial, sans-serif;
@@ -59,17 +66,23 @@
       }
     </style>
   </head>
+
   <body>
     <div class="logo">
+      {% if hide_buttons %}
+      <img src="file://{{ static_dir }}/logo.png" alt="Logo" height="50" /> {%
+      else %}
       <img
         src="{{ url_for('static', filename='logo.png') }}"
         alt="Logo"
         height="50"
       />
+      {% endif %}
     </div>
 
     <h2>Network Design</h2>
 
+    {% if not hide_buttons %}
     <form
       method="POST"
       action="{{ url_for('network_design') }}"
@@ -87,21 +100,28 @@
       /><br /><br />
       <button type="submit">Upload</button>
     </form>
-
-    {% if uploaded_image %}
+    {% endif %} {% if uploaded_image %}
     <div class="uploaded-image">
       <h3>Uploaded Image:</h3>
+      {% if hide_buttons %}
+      <img
+        src="file://{{ static_dir }}/uploads/{{ uploaded_image }}"
+        alt="Uploaded Network Diagram"
+        style="max-width: 90%; border: 1px solid #ccc; padding: 10px"
+      />
+      {% else %}
       <img
         src="{{ url_for('static', filename='uploads/' ~ uploaded_image) }}"
         alt="Uploaded Network Diagram"
         style="max-width: 90%; border: 1px solid #ccc; padding: 10px"
       />
+      {% endif %}
     </div>
-    {% endif %}
-
+    {% endif %} {% if not hide_buttons %}
     <form action="{{ url_for('ipsec') }}" method="get">
       <button type="submit" class="btn">Next</button>
     </form>
+    {% endif %}
 
     <div class="footer">
       <p>Qualys Confidential</p>
